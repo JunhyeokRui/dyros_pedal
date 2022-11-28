@@ -9,6 +9,10 @@ DyrosPedal::DyrosPedal()
 
 void DyrosPedal::pedalCallback(const sensor_msgs::Joy::ConstPtr& pedal)
 {
+    bool playstation_joystick_mode = false;
+    bool pedal_mode = true;
+
+
 //    if (pedal->axes[1] > 0.5)
 //    {
 //        walk_cmd_ = true;
@@ -38,9 +42,32 @@ void DyrosPedal::pedalCallback(const sensor_msgs::Joy::ConstPtr& pedal)
     // walk_cmd_msg_.step_length_y = pedal->buttons[2];
     // std::cout << "B" <<walk_cmd_msg_.theta << "X" <<pedal->axes[4] << std::endl;
 
-    walk_cmd_msg_.step_length_x = pedal->axes[0];
-    walk_cmd_msg_.z = pedal->axes[1];
-    walk_cmd_msg_.theta = pedal->axes[2];
+    // pedal mode
+
+    if(pedal_mode)
+    {
+        walk_cmd_msg_.step_length_x = pedal->axes[0];
+        walk_cmd_msg_.z = pedal->axes[1];
+        walk_cmd_msg_.theta = pedal->axes[2];
+    }
+
+
+    // play station controller mode'
+    if(playstation_joystick_mode)
+    {
+        if(pedal->axes[1] >= 0)
+        {
+            walk_cmd_msg_.step_length_x = 2*pedal->axes[1]-1;
+            walk_cmd_msg_.z = -1.0;
+        }
+        else
+        {
+            walk_cmd_msg_.step_length_x = -1.0;
+            walk_cmd_msg_.z = 2*(-pedal->axes[1])-1;
+        }
+        
+        walk_cmd_msg_.theta = -pedal->axes[3];
+    }
 
 
     // if (walk_cmd_ ==true)
