@@ -13,14 +13,19 @@ class DyrosPedal
   public:
     DyrosPedal();
     void pedalCallback(const sensor_msgs::Joy::ConstPtr& joy);
+    void deckCallback(const sensor_msgs::Joy::ConstPtr& joy);
+
      
   private:
     ros::NodeHandle nh_;
     ros::Publisher walking_cmd_pub_;
     ros::Subscriber pedal_sub_;
+    ros::Subscriber pedal_sub2_;
     bool walk_cmd_;
     bool walk_cmd_pre_;
     tocabi_msgs::WalkingCommand walk_cmd_msg_;
+
+    bool use_deck_ = false;
   };
  
 
